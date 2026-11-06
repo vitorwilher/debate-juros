@@ -1,18 +1,18 @@
 /*-- scss:defaults --*/
-// Estilo editorial (modelo "Mapa da Operação Eficiente", Sistema de Donos):
-// fundo creme, títulos em serifa, preto e laranja, blocos pretos com faixa laranja.
+// Estrutura editorial (modelo "Mapa da Operação Eficiente", Sistema de Donos) com as cores da
+// Análise Macro: fundo claro, títulos em serifa, navy e azul, blocos navy com faixa azul.
 
-$preto: #1A1A1A;
-$laranja: #E85500;
-$creme: #FBF2DC;
-$cinza: #5A5A5A;
-$linha: #E3DCCB;
+$preto: #0A1A3C;
+$laranja: #1CA0D8;
+$creme: #F4F7FB;
+$cinza: #4A5768;
+$linha: #DDE4EC;
 $branco: #FFFFFF;
 
 $body-bg: $creme;
 $body-color: $preto;
 $primary: $laranja;
-$link-color: #B54200;
+$link-color: #0061D6;
 $headings-color: $preto;
 $font-family-sans-serif: Arial, Helvetica, sans-serif;
 $headings-font-family: "Century Schoolbook", Georgia, "Times New Roman", serif;
@@ -51,8 +51,8 @@ h3 { font-size: 1.3rem; }
   background: $preto; color: $creme; padding: 22px 26px; border-left: 6px solid $laranja;
   font-family: Georgia, serif; font-size: 1.2rem; line-height: 1.45; margin: 1.6rem 0 2rem;
   p { margin: 0; color: $creme; }
-  strong { color: #FFB27A; font-weight: 400; }
-  a { color: #FFB27A; }
+  strong { color: #7FC4E8; font-weight: 400; }
+  a { color: #7FC4E8; }
 }
 
 /* cartões de número */
@@ -83,8 +83,8 @@ thead th { font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; c
 .cta-am {
   background: $preto; color: $creme; padding: 1.6rem 1.8rem; margin: 3rem 0 1rem; border-left: 6px solid $laranja;
   h3 { color: $creme; margin-top: 0; font-size: 1.5rem; border: 0; }
-  p { color: #E9DFC6; }
-  a.btn-am { display: inline-block; background: $laranja; color: $preto; padding: .7rem 1.3rem; text-decoration: none; font-weight: 700; }
+  p { color: #C9D3DE; }
+  a.btn-am { display: inline-block; background: $laranja; color: #FFFFFF; padding: .7rem 1.3rem; text-decoration: none; font-weight: 700; }
 }
 
 /* controles (Observable Inputs) */
@@ -99,8 +99,8 @@ input[type=number], input[type=text] { background: $branco; border: 1px solid $l
 .tl-item { position: relative; background: $branco; border: 1px solid $linha; border-left: 6px solid $linha; padding: 14px 18px; margin-bottom: 12px;
   &.artigo { border-left-color: $laranja; }
   &.resposta { border-left-color: $preto; }
-  &.evidencia, &.teoria { border-left-color: #8C7A5B; }
-  &.analise { border-left-color: #C9B98F; }
+  &.evidencia, &.teoria { border-left-color: #8894A5; }
+  &.analise { border-left-color: #C6D0DC; }
   .tl-data { font-size: .7rem; color: $cinza; text-transform: uppercase; letter-spacing: .1em; font-weight: 700; }
   .tl-autor { font-family: "Century Schoolbook", Georgia, serif; color: $preto; font-size: 1.3rem; margin-top: .15rem; }
   .tl-titulo { font-style: italic; color: $cinza; }
@@ -112,7 +112,7 @@ input[type=number], input[type=text] { background: $branco; border: 1px solid $l
 .chip b { font-weight: 700; }
 .chip.sim b { color: $preto; } .chip.sim { border-color: $preto; }
 .chip.nao b { color: $laranja; } .chip.nao { border-color: $laranja; }
-.chip.parcial { border-color: #C9B98F; }
+.chip.parcial { border-color: #C6D0DC; }
 .tipo-tag { font-size: .65rem; color: $cinza; border: 1px solid $linha; padding: 0 .4rem; margin-left: .45rem; letter-spacing: .06em; }
 
 /* gráficos */

@@ -82,12 +82,12 @@ Plot.plot({
   width, height: 420, marginLeft: 50, marginBottom: 40,
   x: {domain: anos, label: null, tickRotate: 0},
   y: {label: "pontos de % do PIB", grid: true, tickFormat: d => fmt(d, 0)},
-  color: {domain: ordem, range: ["#E85500", "#1A1A1A", "#C9A66B", "#7A7A7A", "#CFC6B0"], legend: true},
+  color: {domain: ordem, range: ["#1CA0D8", "#0A1A3C", "#F5A524", "#8894A5", "#C6D0DC"], legend: true},
   marks: [
     Plot.barY(decf, {x: "rotulo", y: "valor", fill: "componente", order: ordem,
       title: d => `${d.rotulo}\n${d.componente}: ${fmt(d.valor)} p.p. do PIB`, tip: true}),
-    Plot.ruleY([0], {stroke: "#1A1A1A"}),
-    Plot.dot(variacoes, {x: "rotulo", y: "variacao", r: 5, fill: "white", stroke: "#1A1A1A", strokeWidth: 2,
+    Plot.ruleY([0], {stroke: "#0A1A3C"}),
+    Plot.dot(variacoes, {x: "rotulo", y: "variacao", r: 5, fill: "white", stroke: "#0A1A3C", strokeWidth: 2,
       title: d => `${d.rotulo}\nVariação da dívida: ${fmt(d.variacao)} p.p.`, tip: true})
   ]
 })
@@ -143,9 +143,9 @@ mini = (campo, titulo, cor) => {
     ]
   })
 }
-html`${mini("dbgg", "Dívida bruta do governo geral (% do PIB)", "#1A1A1A")}
-${mini("selic", "Selic efetiva (% ao ano)", "#E85500")}
-${mini("ipca12", "IPCA em 12 meses (%)", "#8C7A5B")}`
+html`${mini("dbgg", "Dívida bruta do governo geral (% do PIB)", "#0A1A3C")}
+${mini("selic", "Selic efetiva (% ao ano)", "#1CA0D8")}
+${mini("ipca12", "IPCA em 12 meses (%)", "#8894A5")}`
 ```
 
 [Fonte: BCB, SGS (séries 13762, 4189 e 13522). Elaboração: Análise Macro.]{.nota-fonte}
@@ -166,7 +166,7 @@ exigido para rolar a dívida subir, o custo chega com a mesma rapidez.`
 //| echo: false
 Plot.plot({
   width, height: 90, marginLeft: 10, x: {label: "% da dívida bruta", domain: [0, 100]},
-  color: {domain: ["Selic", "Preços", "Prefixada", "Câmbio"], range: ["#E85500", "#1A1A1A", "#8C7A5B", "#C9A66B"], legend: true},
+  color: {domain: ["Selic", "Preços", "Prefixada", "Câmbio"], range: ["#1CA0D8", "#0A1A3C", "#8894A5", "#F5A524"], legend: true},
   marks: [Plot.barX([
     {tipo: "Selic", v: e.selic}, {tipo: "Preços", v: e.precos}, {tipo: "Prefixada", v: e.prefixado}, {tipo: "Câmbio", v: e.cambial}],
     Plot.stackX({x: "v", fill: "tipo", title: d => `${d.tipo}: ${fmt(d.v)}%`, tip: true}))]

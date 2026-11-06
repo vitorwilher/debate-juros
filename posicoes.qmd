@@ -21,14 +21,14 @@ Plot.plot({
   width: Math.max(width, 640), height: 34 * linhas.length + 70, marginLeft: 270, marginTop: 70,
   x: {domain: deb.perguntas.map(p => p.curta), axis: null},
   y: {domain: linhas.map(nomeLinha), label: null},
-  color: {domain: ["Sim", "Em parte", "Não"], range: ["#1A1A1A", "#C9B98F", "#E85500"], legend: true},
+  color: {domain: ["Sim", "Em parte", "Não"], range: ["#0A1A3C", "#C6D0DC", "#F5A524"], legend: true},
   marks: [
     Plot.axisX({anchor: "top", lineWidth: 9, label: null, tickSize: 0, fontSize: 11}),
     Plot.cell(celulas, {x: "pergunta", y: "autor", fill: "#FFFFFF", inset: 1.5}),
     Plot.cell(celulas.filter(c => c.pos), {x: "pergunta", y: "autor", fill: "pos", inset: 1.5,
       title: c => `${c.texto}\n${c.autor}: ${c.pos}\n\n${c.tese}`, tip: true}),
     Plot.text(celulas.filter(c => c.pos), {x: "pergunta", y: "autor", text: "pos",
-      fill: c => c.pos === "Sim" ? "#FBF2DC" : "#1A1A1A", fontSize: 11})
+      fill: c => c.pos === "Sim" ? "#FFFFFF" : "#0A1A3C", fontSize: 11})
   ]
 })
 ```
