@@ -1,0 +1,131 @@
+---
+title: "Simulador"
+pagetitle: "O debate dos juros: simulador da dívida"
+description: "Mexa no custo da dívida, no crescimento e no primário e veja a trajetória da dívida bruta com e sem a proposta de Lara Resende."
+---
+
+A conta da dívida é uma corrida entre o custo da dívida e o PIB nominal. O simulador projeta a dívida
+bruta, ano a ano, com a identidade
+
+$$
+d_t = d_{t-1}\,\frac{1 + r_t}{1 + \theta} - pb ,
+$$
+
+em três cenários: **sem mudança**, a **proposta** (o custo da dívida converge para um alvo mais baixo)
+e o **ajuste fiscal** (custo atual com o primário que estabiliza a dívida). Os valores iniciais são os
+dados mais recentes do Banco Central.
+
+```{ojs}
+//| echo: false
+n = FileAttachment("site-data/numeros.json").json()
+fmt = (x, d = 1) => x.toLocaleString("pt-BR", {minimumFractionDigits: d, maximumFractionDigits: d})
+```
+
+::: {.grid}
+::: {.g-col-12 .g-col-md-6}
+#### Hoje
+
+```{ojs}
+//| echo: false
+viewof d0 = Inputs.range([40, 120], {value: n.dbgg.valor, step: 0.1, label: "Dívida bruta inicial (% PIB)"})
+viewof r0 = Inputs.range([4, 18], {value: n.custo_dbgg.valor, step: 0.1, label: "Custo médio da dívida (% a.a.)"})
+viewof th = Inputs.range([0, 14], {value: n.pib_nominal_12m, step: 0.1, label: "Crescimento nominal do PIB (% a.a.)"})
+viewof pb = Inputs.range([-4, 5], {value: n.primario.valor, step: 0.1, label: "Superávit primário (% PIB)"})
+viewof H = Inputs.range([5, 20], {value: 10, step: 1, label: "Horizonte (anos)"})
+```
+:::
+
+::: {.g-col-12 .g-col-md-6}
+#### A proposta
+
+```{ojs}
+//| echo: false
+viewof alvo = Inputs.range([3, 14], {value: 7.5, step: 0.1, label: "Custo-alvo da dívida (% a.a.)"})
+viewof s = Inputs.range([10, 100], {value: 60, step: 5, label: "Dívida que reprecifica por ano (%)"})
+viewof premio = Inputs.range([0, 10], {value: 0, step: 0.25, label: "Prêmio de risco após o anúncio (p.p.)"})
+viewof dth = Inputs.range([-4, 4], {value: 0, step: 0.1, label: "Mudança no crescimento nominal (p.p.)"})
+```
+:::
+:::
+
+```{ojs}
+//| echo: false
+// custo da dívida no ano t: converge do custo atual para alvo + prêmio à velocidade s
+caminho = (r_ini, r_fim, vel) => d3.range(1, H + 1).map(t => r_fim + (r_ini - r_fim) * Math.pow(1 - vel, t))
+projeta = (custos, theta, prim) => {
+  let d = d0, out = [{ano: 0, d}]
+  custos.forEach((r, i) => { d = d * (1 + r / 100) / (1 + theta / 100) - prim; out.push({ano: i + 1, d}) })
+  return out
+}
+pbstar = (r0 / 100 - th / 100) / (1 + th / 100) * d0
+custos_prop = caminho(r0, alvo + premio, s / 100)
+cen = [
+  ...projeta(d3.range(H).map(() => r0), th, pb).map(x => ({...x, cenario: "Sem mudança"})),
+  ...projeta(custos_prop, th + dth, pb).map(x => ({...x, cenario: "Proposta"})),
+  ...projeta(d3.range(H).map(() => r0), th, pbstar).map(x => ({...x, cenario: "Ajuste fiscal"}))
+]
+final = c => cen.filter(x => x.cenario === c && x.ano === H)[0].d
+// primário que estabiliza a dívida quando o custo chega ao alvo (com o prêmio)
+pbstar_prop = ((alvo + premio) / 100 - (th + dth) / 100) / (1 + (th + dth) / 100) * d0
+```
+
+```{ojs}
+//| echo: false
+html`<div class="cards">
+  <div class="card-am"><div class="rot">Sem mudança, em ${H} anos</div><div class="val alerta">${fmt(final("Sem mudança"))}%</div><div class="ref">do PIB</div></div>
+  <div class="card-am"><div class="rot">Com a proposta</div><div class="val">${fmt(final("Proposta"))}%</div><div class="ref">do PIB</div></div>
+  <div class="card-am"><div class="rot">Primário que estabiliza hoje</div><div class="val">${fmt(pbstar)}%</div><div class="ref">do PIB, com custo de ${fmt(r0)}%</div></div>
+  <div class="card-am"><div class="rot">Primário que estabiliza com a proposta</div><div class="val">${fmt(pbstar_prop)}%</div><div class="ref">do PIB, com custo de ${fmt(alvo + premio)}%</div></div>
+</div>`
+```
+
+```{ojs}
+//| echo: false
+Plot.plot({
+  width, height: 420, marginLeft: 50,
+  x: {label: "anos à frente", ticks: H},
+  y: {label: "dívida bruta, % do PIB", grid: true, tickFormat: d => fmt(d, 0),
+      domain: [Math.min(...cen.map(c => c.d)) - 5, Math.max(...cen.map(c => c.d)) + 5]},
+  color: {domain: ["Sem mudança", "Proposta", "Ajuste fiscal"], range: ["#F5A524", "#1CA0D8", "#0A1A3C"], legend: true},
+  marks: [
+    Plot.ruleY([d0], {stroke: "#C6D0DC", strokeDasharray: "4,4"}),
+    Plot.lineY(cen, {x: "ano", y: "d", stroke: "cenario", strokeWidth: 2.5}),
+    Plot.dot(cen, Plot.pointer({x: "ano", y: "d", fill: "cenario", r: 5,
+      title: d => `${d.cenario}, ano ${d.ano}: ${fmt(d.d)}% do PIB`, tip: true}))
+  ]
+})
+```
+
+```{ojs}
+//| echo: false
+Plot.plot({
+  width, height: 200, marginLeft: 50,
+  x: {label: "anos à frente", ticks: H},
+  y: {label: "custo da dívida, % a.a.", grid: true, domain: [0, Math.max(r0, alvo + premio) + 2]},
+  marks: [
+    Plot.ruleY([th + dth], {stroke: "#8894A5", strokeDasharray: "4,4"}),
+    Plot.text([{x: H, y: th + dth}], {x: "x", y: "y", text: () => "crescimento nominal", dy: -8, textAnchor: "end", fill: "#8894A5"}),
+    Plot.lineY(custos_prop.map((r, i) => ({ano: i + 1, r})), {x: "ano", y: "r", stroke: "#1CA0D8", strokeWidth: 2.5}),
+    Plot.ruleY([r0], {stroke: "#F5A524"})
+  ]
+})
+```
+
+[Custo médio da dívida no cenário da proposta (azul) e sem mudança (laranja). Enquanto o custo
+fica acima do crescimento nominal (tracejado), a dívida cresce sozinha.]{.nota-fonte}
+
+## Como ler o simulador
+
+- **O alvo de 7,5%** é o da proposta: a banda de 3% a 5,5% para a Selic mais um *spread* de dois
+  pontos. A velocidade de 60% ao ano aproxima o peso da dívida atrelada à Selic e da que vence em um
+  ano.
+- **O prêmio de risco é o centro da disputa.** Para Lara Resende, um anúncio coordenado com a
+  política fiscal manteria o custo perto do alvo. Para os críticos, o anúncio seria lido como perda de
+  lastro fiscal, e os investidores exigiriam um prêmio maior para rolar a dívida, antes mesmo de a
+  Selic cair. Suba o prêmio e veja o primário necessário com a proposta se aproximar do
+  de hoje: com dois a três pontos de prêmio, boa parte do ganho desaparece.
+- **O crescimento nominal** pode mudar com a proposta: menos inflação, se a hipótese neofisheriana
+  estiver certa; mais inflação e câmbio mais fraco, se o anúncio tirar a âncora.
+- O simulador é aritmética, não um modelo: ele não diz qual prêmio ou qual inflação viria. Ele mostra
+  **quanto** cada hipótese pesa na conta. Para os argumentos de cada lado, veja
+  [quem diz o quê](posicoes.qmd).

@@ -1,0 +1,46 @@
+project:
+  type: website
+  output-dir: _site
+  pre-render: python3 scripts/construir.py
+  resources:
+    - site-data/
+    - assets/
+
+lang: pt-BR
+
+website:
+  title: "O debate dos juros"
+  description: "Painel aberto e atualizado do debate sobre juros, inflação e dívida pública no Brasil, com os dados do Banco Central."
+  site-url: https://vitorwilher.github.io/debate-juros/
+  repo-url: https://github.com/vitorwilher/debate-juros
+  repo-actions: [issue]
+  open-graph: true
+  navbar:
+    logo: assets/logo-am-navy.png
+    logo-alt: "Análise Macro"
+    left:
+      - href: index.qmd
+        text: Painel
+      - href: simulador.qmd
+        text: Simulador
+      - href: linha-do-tempo.qmd
+        text: Linha do tempo
+      - href: posicoes.qmd
+        text: Quem diz o quê
+      - href: metodo.qmd
+        text: Dados e método
+    right:
+      - icon: github
+        href: https://github.com/vitorwilher/debate-juros
+        aria-label: GitHub
+  page-footer:
+    left: "Dados: Banco Central do Brasil (SGS e Notas de Estatísticas Fiscais). Elaboração: Análise Macro."
+    right: "[Receba o Boletim AM](https://analisemacro.com.br/boletim-am)"
+
+format:
+  html:
+    theme: [cosmo, assets/estilo.scss]
+    toc: false
+    page-layout: article
+    smooth-scroll: true
+    link-external-newwindow: true

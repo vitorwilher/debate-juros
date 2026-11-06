@@ -1,0 +1,98 @@
+---
+title: "Quem diz o quê"
+pagetitle: "O debate dos juros: mapa de posições"
+description: "O mapa das posições no debate dos juros: cinco perguntas, os autores e o que cada um afirma, com os contra-argumentos."
+---
+
+O debate se reduz a cinco perguntas. O mapa mostra a resposta que cada texto dá a elas. Uma célula
+vazia quer dizer que o texto não trata do ponto, não que o autor discorde. Passe o mouse para ver a
+pergunta completa e a tese do autor.
+
+```{ojs}
+//| echo: false
+deb = FileAttachment("site-data/debate.json").json()
+rotulos = ({sim: "Sim", nao: "Não", parcial: "Em parte"})
+linhas = deb.intervencoes.filter(it => Object.keys(it.posicoes).length > 0)
+nomeLinha = it => `${it.autor} (${it.data_texto ?? new Date(it.data + "T12:00").toLocaleDateString("pt-BR")})`
+celulas = linhas.flatMap(it => deb.perguntas.map(p => ({
+  autor: nomeLinha(it), pergunta: p.curta, texto: p.texto, tese: it.tese,
+  pos: it.posicoes[p.id] ? rotulos[it.posicoes[p.id]] : null})))
+Plot.plot({
+  width: Math.max(width, 640), height: 34 * linhas.length + 70, marginLeft: 270, marginTop: 70,
+  x: {domain: deb.perguntas.map(p => p.curta), axis: null},
+  y: {domain: linhas.map(nomeLinha), label: null},
+  color: {domain: ["Sim", "Em parte", "Não"], range: ["#1CA0D8", "#C6D0DC", "#F5A524"], legend: true},
+  marks: [
+    Plot.axisX({anchor: "top", lineWidth: 9, label: null, tickSize: 0, fontSize: 11}),
+    Plot.cell(celulas, {x: "pergunta", y: "autor", fill: "#F5F7FA", inset: 1.5}),
+    Plot.cell(celulas.filter(c => c.pos), {x: "pergunta", y: "autor", fill: "pos", inset: 1.5, rx: 4,
+      title: c => `${c.texto}\n${c.autor}: ${c.pos}\n\n${c.tese}`, tip: true}),
+    Plot.text(celulas.filter(c => c.pos), {x: "pergunta", y: "autor", text: "pos",
+      fill: c => c.pos === "Sim" ? "white" : "#0A1A3C", fontSize: 11})
+  ]
+})
+```
+
+```{ojs}
+//| echo: false
+md`${deb.perguntas.map(p => `- **${p.curta}** ${p.texto}`).join("\n")}`
+```
+
+## Os pontos em disputa
+
+| A proposta afirma | O contra-argumento |
+|:---|:---|
+| A curva de Phillips é horizontal: juro alto não reduz a inflação pela via da atividade. | A pandemia mostrou atividade aquecida com inflação alta. Nos ciclos da Selic e nos dados de alta frequência, a alta de juros reduz a inflação esperada. |
+| No longo prazo, juro alto causa inflação alta. | Só com uma regra que viole o princípio de Taylor e um critério de equilíbrio não convencional; com aprendizado, o resultado some (García-Schmidt e Woodford, 2019). |
+| O QE prova que financiar o governo com reservas bancárias não é inflacionário. | O QE ocorreu em recessão de balanço e com juro real perto de zero, o oposto do Brasil. |
+| Com a dívida em LFT, cortar juros não gera inflação. | Supõe que os investidores continuam a financiar o governo a juros menores. Se fugirem antes do corte, a parcela pós-fixada evapora; e, se o corte for lido como perda de lastro, a própria teoria fiscal prevê inflação. |
+| O juro é o "único motor" da dívida. | Na última década, o juro real domina a conta da dívida bruta ([veja o painel](index.qmd)). Mas, na série longa da dívida líquida, o que separa a queda até 2013 da alta desde 2014 é o primário. |
+| As reservas bastam para conter o câmbio. | São o último colchão do país, e a intervenção esterilizada tem histórico ruim na América Latina (Cochrane, 2026). A China gastou cerca de US$ 1 trilhão em 2015, de US$ 4 trilhões. |
+| O conselho fiscal-monetário é coordenação, não dominância. | Subordina a política monetária à necessidade fiscal. Países com passado de monetização precisam de bancos centrais mais agressivos, não menos (Jácome et al., 2026). |
+
+## A teoria em três equações
+
+**Fisher e Taylor.** A equação de Fisher, $i = r + \pi^e$, é comum às duas escolas. Se o Banco Central
+segue uma regra $i = k\pi + z$, no longo prazo
+
+$$
+\pi = \frac{z - r}{1 - k}.
+$$
+
+Com $k > 1$ (o princípio de Taylor), um aperto ($z$ maior) **reduz** a inflação; com $k < 1$, a
+**eleva**. Foi o argumento de Eduardo Loyo em 2017.
+
+**Teoria fiscal do nível de preços.** O valor real da dívida tem de ser igual ao valor presente dos
+superávits esperados:
+
+$$
+\frac{B_{t-1}}{P_t} = E_t \sum_{j=0}^{\infty} \beta^j s_{t+j} .
+$$
+
+Se o lastro fiscal cai, o nível de preços sobe. Na leitura convencional, o superávit se ajusta ao
+preço; na teoria fiscal (Sims, Cochrane), o preço se ajusta ao superávit.
+
+**Dominância fiscal.** Com dívida alta e o Tesouro "jogando primeiro" (Sargent e Wallace, 1981;
+Blanchard, 2004, para o Brasil), juros mais altos pioram a dívida, depreciam o câmbio e elevam a
+inflação.
+
+## Como ler o debate
+
+Despido da retórica, o argumento de 2026 combina três hipóteses:
+
+1. a inflação responde pouco à atividade;
+2. no longo prazo, a inflação acompanha o juro nominal fixado pelo Banco Central;
+3. os detentores da dívida e do câmbio não reagem ao anúncio, ou as reservas absorvem a reação.
+
+As duas primeiras são hipóteses de modelo, e a evidência brasileira pesa contra elas. A terceira é a
+decisiva: uma política anunciada é antecipada, e o prêmio para rolar a dívida, o câmbio e a inflação
+esperada mudam **antes** de a Selic cair. Mesmo John Cochrane, cuja teoria fiscal está na base do argumento,
+escreveu que não conhece "a good successful historical precedent" para ela, e que sua principal
+preocupação é o lado fiscal.
+
+::: {.destaque}
+A aritmética fiscal da proposta está correta. A disputa está em saber se os juros mais baixos
+sobreviveriam ao anúncio.
+:::
+
+[Faça a conta você mesmo no simulador →](simulador.qmd)

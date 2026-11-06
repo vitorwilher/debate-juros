@@ -1,0 +1,58 @@
+name: Atualizar dados e publicar
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "0 12 5,20 * *"   # dias 5 e 20 de cada mês, 9h de Brasília
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Dependências
+        run: pip install pandas pyyaml
+
+      - name: Baixar séries do SGS (só no agendamento ou à mão)
+        if: github.event_name != 'push'
+        run: python scripts/atualizar_sgs.py
+
+      - name: Gravar dados novos no repositório
+        if: github.event_name != 'push'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add dados/sgs
+          git diff --cached --quiet || git commit -m "Dados do SGS atualizados em $(date +%d/%m/%Y)"
+          git push
+
+      - uses: quarto-dev/quarto-actions/setup@v2
+
+      - name: Render
+        run: quarto render
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deploy
+        uses: actions/deploy-pages@v4

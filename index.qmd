@@ -1,0 +1,185 @@
+---
+pagetitle: "O debate dos juros: painel"
+description: "Juros, inflação e dívida pública no Brasil: a proposta de Lara Resende confrontada com os dados do Banco Central, atualizados todo mês."
+---
+
+::: {.hero}
+[PAINEL ABERTO · ATUALIZADO TODO MÊS]{.kicker}
+
+# O debate dos *juros*
+
+[Em setembro de 2026, André Lara Resende propôs derrubar a Selic de forma anunciada, com o argumento
+de que os juros altos são o "único motor" da dívida pública. Este painel acompanha o debate com os
+dados do Banco Central: o que a conta da dívida mostra, quem diz o quê e onde está a disputa.]{.lede}
+:::
+
+```{ojs}
+//| echo: false
+n = FileAttachment("site-data/numeros.json").json()
+fmt = (x, d = 1) => x.toLocaleString("pt-BR", {minimumFractionDigits: d, maximumFractionDigits: d})
+card = (rot, val, ref, alerta = false) => html`<div class="card-am"><div class="rot">${rot}</div>
+  <div class="val ${alerta ? "alerta" : ""}">${val}</div><div class="ref">${ref}</div></div>`
+html`<div class="cards">
+  ${card("Selic efetiva", fmt(n.selic.valor, 2) + "%", "ao ano, " + n.selic.ref)}
+  ${card("Juro real ex post", fmt(n.juro_real_expost) + "%", "Selic deflacionada pelo IPCA em 12 meses")}
+  ${card("Dívida bruta", fmt(n.dbgg.valor) + "%", "do PIB, " + n.dbgg.ref)}
+  ${card("Primário em 12 meses", fmt(n.primario.valor) + "%", "do PIB, " + n.primario.ref)}
+  ${card("Primário que estabiliza", fmt(n.pbstar) + "%", "do PIB, com o custo atual da dívida", true)}
+</div>`
+```
+
+## A conta em uma linha
+
+Toda a discussão parte de uma identidade. Com $d$ a dívida em proporção do PIB, $r$ o custo nominal
+da dívida, $\theta$ o crescimento nominal do PIB e $pb$ o superávit primário:
+
+$$
+\Delta d_t = \frac{r_t - \theta_t}{1 + \theta_t}\, d_{t-1} - pb_t .
+$$
+
+```{ojs}
+//| echo: false
+md`Nos doze meses até ${n.referencia}, o custo implícito da dívida bruta foi de **${fmt(n.custo_dbgg.valor)}%**
+e o PIB nominal cresceu **${fmt(n.pib_nominal_12m)}%**. Com a dívida bruta em ${fmt(n.dbgg.valor)}% do PIB,
+estabilizá-la exigiria um superávit primário de **${fmt(n.pbstar)}% do PIB**, contra um resultado de
+${fmt(n.primario.valor)}%. É essa distância que dá força à proposta. A pergunta que divide os
+economistas é outra: se os juros **ficariam** mais baixos depois do anúncio.
+[Teste no simulador →](simulador.qmd)`
+```
+
+## O que fez a dívida bruta subir
+
+A decomposição aplica a identidade ano a ano à dívida bruta do governo geral, com os **fatores
+condicionantes** que o Banco Central publica nas Notas de Estatísticas Fiscais. No formato do FMI, os
+juros nominais se dividem em juro real e **erosão inflacionária** (a parte que só repõe a inflação),
+e o efeito do PIB vira crescimento real.
+
+```{ojs}
+//| echo: false
+viewof formato = Inputs.radio(["Juro real e crescimento real (FMI)", "Juros nominais e efeito do PIB (BCB)"],
+  {value: "Juro real e crescimento real (FMI)", label: "Formato"})
+```
+
+```{ojs}
+//| echo: false
+dec = (await FileAttachment("site-data/decomposicao.csv").csv({typed: true})).map(d => ({...d, rotulo: String(d.rotulo)}))
+anos = Array.from(new Set(dec.map(d => d.rotulo)))
+decf = formato.startsWith("Juro real") ? dec : dec.map(d =>
+  d.componente === "Juro real" ? {...d, componente: "Juros nominais", valor: d.valor + d.erosao} :
+  d.componente === "Crescimento real" ? {...d, componente: "Efeito do PIB", valor: d.valor - d.erosao} : d)
+ordem = formato.startsWith("Juro real")
+  ? ["Juro real", "Crescimento real", "Emissões líquidas", "Câmbio", "Outros"]
+  : ["Juros nominais", "Efeito do PIB", "Emissões líquidas", "Câmbio", "Outros"]
+variacoes = Array.from(d3.rollup(dec, v => v[0].variacao, d => d.rotulo), ([rotulo, variacao]) => ({rotulo, variacao}))
+Plot.plot({
+  width, height: 420, marginLeft: 50, marginBottom: 40,
+  x: {domain: anos, label: null, tickRotate: 0},
+  y: {label: "pontos de % do PIB", grid: true, tickFormat: d => fmt(d, 0)},
+  color: {domain: ordem, range: ["#0A1A3C", "#1CA0D8", "#F5A524", "#8894A5", "#C6D0DC"], legend: true},
+  marks: [
+    Plot.barY(decf, {x: "rotulo", y: "valor", fill: "componente", order: ordem,
+      title: d => `${d.rotulo}\n${d.componente}: ${fmt(d.valor)} p.p. do PIB`, tip: true}),
+    Plot.ruleY([0], {stroke: "#3A4757"}),
+    Plot.dot(variacoes, {x: "rotulo", y: "variacao", r: 5, fill: "white", stroke: "#0A1A3C", strokeWidth: 2,
+      title: d => `${d.rotulo}\nVariação da dívida: ${fmt(d.variacao)} p.p.`, tip: true})
+  ]
+})
+```
+
+[Barras: contribuições à variação da dívida bruta, em pontos de % do PIB. Círculos: variação da
+dívida no ano. A última barra é o ano corrente até o mês indicado. Passe o mouse para ver os valores.
+Fonte: BCB, Notas de Estatísticas Fiscais (Tabela 19); IPCA (SGS 433). Elaboração: Análise Macro.]{.nota-fonte}
+
+```{ojs}
+//| echo: false
+s = n.decomp.soma
+md`| Contribuições, ${n.decomp.inicio} a ${n.decomp.fim} | Pontos do PIB |
+|:---|---:|
+| Juro real | ${fmt(s.juro_real)} |
+| Crescimento real | ${fmt(s.cresc_real)} |
+| Emissões líquidas | ${fmt(s.emissoes)} |
+| Câmbio e outros ajustes | ${fmt(s.ajuste_cambial + s.outros)} |
+| **Soma das variações anuais publicadas** | **${fmt(s.variacao)}** |
+| Revisões do PIB entre edições das notas | ${fmt(n.decomp.revisoes)} |
+| **Variação do nível: de ${fmt(n.decomp.nivel_ini)}% para ${fmt(n.decomp.nivel_fim)}% do PIB** | **${fmt(n.decomp.nivel_fim - n.decomp.nivel_ini)}** |
+| *Memória: juros nominais = juro real + erosão inflacionária* | *${fmt(s.juros)} = ${fmt(s.juro_real)} + ${fmt(s.erosao)}* |
+
+Na última década, a dívida bruta foi antes de tudo uma **conta de juros**: o juro real somou
+${fmt(s.juro_real, 0)} pontos do PIB, mais que a alta da própria dívida. As emissões líquidas quase se
+anularam, mas isso não quer dizer primário zero: parte dos déficits foi coberta com ativos do governo
+(caixa do Tesouro, devoluções do BNDES), o que eleva a dívida líquida sem passar pela bruta. A soma das
+variações anuais difere da variação do nível porque cada ano é publicado com o PIB então disponível, e
+o IBGE revisa o PIB depois.`
+```
+
+::: {.callout-note title="O que a conta não diz"}
+A decomposição atribui a variação da dívida aos seus termos, mas não diz **por que** o juro real é
+alto. Para Lara Resende, porque o Banco Central o fixa. Para os críticos, em boa parte porque o risco
+fiscal e a inflação esperada exigem um prêmio. Nenhuma identidade contábil resolve essa pergunta.
+:::
+
+## Selic, inflação e dívida desde 2006
+
+```{ojs}
+//| echo: false
+hist = FileAttachment("site-data/historico.csv").csv({typed: true})
+mini = (campo, titulo, cor) => {
+  const dados = hist.filter(d => d[campo] != null)
+  return Plot.plot({
+    width, height: 170, marginLeft: 40, marginTop: 28,
+    y: {grid: true, label: titulo, labelAnchor: "top", labelArrow: "none", tickFormat: d => fmt(d, 0)},
+    x: {label: null, type: "utc"},
+    marks: [
+      Plot.lineY(dados, {x: "data", y: campo, stroke: cor, strokeWidth: 2}),
+      Plot.tip(dados, Plot.pointerX({x: "data", y: campo,
+        title: d => `${d.data.toLocaleDateString("pt-BR", {month: "short", year: "numeric", timeZone: "UTC"})}: ${fmt(d[campo])}`}))
+    ]
+  })
+}
+html`${mini("dbgg", "Dívida bruta do governo geral (% do PIB)", "#0A1A3C")}
+${mini("selic", "Selic efetiva (% ao ano)", "#1CA0D8")}
+${mini("ipca12", "IPCA em 12 meses (%)", "#F5A524")}`
+```
+
+[Fonte: BCB, SGS (séries 13762, 4189 e 13522). Elaboração: Análise Macro.]{.nota-fonte}
+
+## A sensibilidade à Selic
+
+```{ojs}
+//| echo: false
+e = n.estrutura
+md`Mais da metade da dívida bruta (**${fmt(e.selic)}%**, compromissadas incluídas) é indexada à Selic,
+e **${fmt(e.vence_12m)}%** vencem em até doze meses. Por isso a Selic chega rápido à conta: segundo o
+Banco Central, cada ponto a menos de Selic reduz a dívida bruta em cerca de **${fmt(n.selic_1pp_dbgg, 2)}
+ponto do PIB** em um ano. É o mecanismo da proposta. A mesma elasticidade vale para cima: se o prêmio
+exigido para rolar a dívida subir, o custo chega com a mesma rapidez.`
+```
+
+```{ojs}
+//| echo: false
+Plot.plot({
+  width, height: 90, marginLeft: 10, x: {label: "% da dívida bruta", domain: [0, 100]},
+  color: {domain: ["Selic", "Preços", "Prefixada", "Câmbio"], range: ["#0A1A3C", "#1CA0D8", "#7FC4E8", "#F5A524"], legend: true},
+  marks: [Plot.barX([
+    {tipo: "Selic", v: e.selic}, {tipo: "Preços", v: e.precos}, {tipo: "Prefixada", v: e.prefixado}, {tipo: "Câmbio", v: e.cambial}],
+    Plot.stackX({x: "v", fill: "tipo", title: d => `${d.tipo}: ${fmt(d.v)}%`, tip: true}))]
+})
+```
+
+[Composição da dívida bruta por indexador. Fonte: BCB, Nota de Estatísticas Fiscais (Tabelas 21 e
+25). Elaboração: Análise Macro.]{.nota-fonte}
+
+::: {.cta-am}
+### Quer a leitura completa?
+
+O dossiê **O debate dos juros** reúne a proposta, a teoria por trás dela, o debate de 2017 a 2026 e
+os dados num PDF de 20 páginas. Ele vai para quem assina o Boletim AM, uma leitura diária de dados da
+economia brasileira, com o código e os números por trás de cada conclusão.
+
+[Quero receber →](https://analisemacro.com.br/boletim-am){.btn-am}
+:::
+
+```{ojs}
+//| echo: false
+md`<span class="nota-fonte">Dados atualizados em ${n.atualizado_em}. Veja [as fontes e o método](metodo.qmd).</span>`
+```

@@ -1,0 +1,77 @@
+---
+title: "Dados e método"
+pagetitle: "O debate dos juros: dados e método"
+description: "De onde vêm os números do painel, como a decomposição da dívida bruta é feita e como sugerir uma intervenção no debate."
+---
+
+## Os dados
+
+Todos os números vêm do Banco Central do Brasil. As séries do SGS são baixadas de novo **todo mês**
+por uma GitHub Action, que refaz os gráficos e republica o site.
+
+| Série | Fonte | Uso |
+|:---|:---|:---|
+| Selic acumulada no mês, anualizada | SGS 4189 | Selic efetiva, juro real |
+| IPCA, variação mensal | SGS 433 | Erosão inflacionária |
+| IPCA, 12 meses | SGS 13522 | Juro real |
+| Dívida bruta do governo geral, % do PIB | SGS 13762 | Nível da dívida |
+| NFSP primárias, 12 meses, % do PIB | SGS 5793 | Resultado primário |
+| PIB em 12 meses, valores correntes | SGS 4382 | Crescimento nominal |
+| Fatores condicionantes da DBGG | Notas de Estatísticas Fiscais, Tabela 19 | Decomposição |
+| Composição por indexador e vencimentos | Notas de Estatísticas Fiscais, Tabelas 21 e 25 | Sensibilidade à Selic |
+| Custo implícito da DBGG e elasticidades | Notas de Estatísticas Fiscais | Primário que estabiliza |
+
+Os itens das Notas de Estatísticas Fiscais não estão no SGS e são atualizados à mão, em
+`dados/bcb/`, quando sai uma nota nova.
+
+## A decomposição da dívida bruta
+
+O Banco Central decompõe a variação da dívida bruta em **fatores condicionantes** (juros nominais,
+emissões líquidas, ajuste cambial e outros) e no **efeito do crescimento do PIB**:
+
+$$
+\Delta d_t = \underbrace{\frac{F_t}{Y_t}}_{\text{fatores}} +
+\underbrace{\left(\frac{d_{t-1}}{1 + \theta_t} - d_{t-1}\right)}_{\text{efeito do PIB}} .
+$$
+
+Para chegar ao formato do FMI (como nas análises de sustentabilidade da dívida italiana), o painel
+separa dos juros nominais a **erosão inflacionária**, $d_{t-1}(\theta_t - g_t)/(1 + \theta_t)$, e a
+soma ao efeito do PIB, que passa a medir o crescimento **real**. O crescimento nominal sai do próprio
+efeito do PIB, $1 + \theta_t = d_{t-1}/(d_{t-1} + \text{efeito}_t)$, e a inflação é o IPCA acumulado no
+período. A soma dos termos não muda, e o script confere que a identidade fecha.
+
+Cada variação anual é a publicada pelo Banco Central na época, com o PIB então disponível. Como o IBGE
+revisa o PIB depois, a soma das variações anuais não coincide com a variação do nível da dívida: a
+diferença aparece no painel como "revisões do PIB".
+
+## O primário que estabiliza a dívida
+
+Da identidade com $\Delta d = 0$:
+
+$$
+pb^* = \frac{r - \theta}{1 + \theta}\, d ,
+$$
+
+com $r$ o custo implícito da dívida bruta em doze meses, $\theta$ o crescimento do PIB nominal em doze
+meses e $d$ a dívida bruta em % do PIB.
+
+## As posições
+
+As intervenções e as posições ficam em [`debate.yml`](https://github.com/vitorwilher/debate-juros/blob/main/debate.yml).
+Cada posição resume o que o texto afirma sobre uma das cinco perguntas do mapa e só é preenchida
+quando o texto trata do ponto. As citações são trechos curtos, no original. Resumos são sempre uma
+leitura; se você acha que uma posição foi mal resumida,
+[abra uma issue](https://github.com/vitorwilher/debate-juros/issues/new).
+
+## Como contribuir
+
+- **Sugira uma intervenção** (artigo, resposta, paper, dado novo) pelo
+  [formulário](https://github.com/vitorwilher/debate-juros/issues/new?template=sugerir-intervencao.yml).
+- **Proponha a mudança direto**: edite `debate.yml` e abra um pull request.
+- **Rode localmente**: `python scripts/atualizar_sgs.py` baixa os dados e `quarto preview` abre o
+  site; o `scripts/construir.py` roda sozinho antes de cada render.
+
+## Licença
+
+O código está sob a licença MIT e os textos e gráficos sob a CC BY 4.0: pode reproduzir, citando
+"Análise Macro, O debate dos juros".

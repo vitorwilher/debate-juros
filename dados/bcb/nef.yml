@@ -1,0 +1,7 @@
+# Números da Nota de Estatísticas Fiscais do BCB que não estão no SGS.
+# Atualize à mão quando sair uma nota nova (e acrescente a linha nova em fatores_dbgg.csv).
+referencia: "set/2026"
+fonte: "BCB, Nota de Estatísticas Fiscais de outubro de 2026"
+custo_implicito_dbgg_12m: 13.0     # % a.a., taxa implícita da dívida bruta, 12 meses
+custo_medio_lara_resende: 12.68     # % a.a., custo médio citado no artigo (jun/2026)
+selic_1pp_dbgg: 0.48                # p.p. do PIB que a DBGG cai em 12 meses por 1 p.p. a menos de Selic

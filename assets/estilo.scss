@@ -1,0 +1,83 @@
+/*-- scss:defaults --*/
+@import url('https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,700;0,800;1,800&family=Inter:wght@400;600&display=swap');
+
+$navy: #0A1A3C;
+$blue: #1CA0D8;
+$amber: #F5A524;
+$ink-soft: #3A4757;
+$muted: #8894A5;
+$line: #E6EAF0;
+$paper: #F5F7FA;
+
+$primary: $blue;
+$body-color: $ink-soft;
+$headings-color: $navy;
+$link-color: #0061D6;
+$font-family-sans-serif: "Inter", system-ui, sans-serif;
+$headings-font-family: "Archivo", "Inter", sans-serif;
+$headings-font-weight: 700;
+$navbar-bg: #FFFFFF;
+$navbar-fg: $navy;
+$navbar-hl: $blue;
+$footer-bg: $paper;
+
+/*-- scss:rules --*/
+.navbar { border-bottom: 1px solid $line; }
+.navbar-brand img { max-height: 28px; }
+
+.hero {
+  margin: 1.5rem 0 2rem;
+  .kicker { font-family: "Archivo"; font-weight: 700; letter-spacing: .12em; color: $blue; font-size: .8rem; }
+  h1 { font-family: "Archivo"; font-weight: 800; font-size: 2.6rem; line-height: 1.1; margin: .3rem 0 .8rem;
+       em { font-style: italic; background: linear-gradient(90deg, $blue, #0061D6);
+            -webkit-background-clip: text; background-clip: text; color: transparent; } }
+  .lede { font-size: 1.15rem; max-width: 46rem; }
+}
+
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: .8rem; margin: 1rem 0 1.5rem; }
+.card-am {
+  background: $paper; border: 1px solid $line; border-radius: 10px; padding: .9rem 1rem;
+  .rot { font-size: .78rem; text-transform: uppercase; letter-spacing: .05em; color: $muted; }
+  .val { font-family: "Archivo"; font-weight: 800; font-size: 1.9rem; color: $navy; line-height: 1.15; }
+  .val.alerta { color: #C47F0B; }
+  .ref { font-size: .78rem; color: $muted; }
+}
+
+.nota-fonte { font-size: .82rem; color: $muted; font-style: italic; margin-top: -.3rem; }
+
+.destaque {
+  border-left: 4px solid $blue; background: $paper; padding: 1rem 1.2rem; margin: 1.5rem 0;
+  font-family: "Archivo"; font-size: 1.2rem; color: $navy;
+}
+
+.cta-am {
+  background: $navy; color: #fff; border-radius: 12px; padding: 1.4rem 1.6rem; margin: 2.5rem 0 1rem;
+  h3 { color: #fff; margin-top: 0; }
+  p { color: #C9D3DE; }
+  a.btn-am { display: inline-block; background: $blue; color: #fff; padding: .55rem 1.1rem; border-radius: 8px;
+             text-decoration: none; font-weight: 600; }
+}
+
+/* linha do tempo */
+.tl-fase { font-family: "Archivo"; font-weight: 800; color: $navy; font-size: 1.5rem; margin: 2rem 0 .6rem;
+           border-bottom: 2px solid $line; padding-bottom: .3rem; }
+.tl-item { position: relative; border-left: 3px solid $line; padding: 0 0 1.4rem 1.2rem; margin-left: .4rem;
+  &::before { content: ""; position: absolute; left: -8px; top: .3rem; width: 13px; height: 13px; border-radius: 50%;
+              background: $blue; border: 2px solid #fff; }
+  &.artigo::before { background: $navy; }
+  &.evidencia::before, &.teoria::before { background: $amber; }
+  &.analise::before { background: $muted; }
+  .tl-data { font-size: .8rem; color: $muted; text-transform: uppercase; letter-spacing: .04em; }
+  .tl-autor { font-family: "Archivo"; font-weight: 700; color: $navy; font-size: 1.1rem; }
+  .tl-titulo { font-style: italic; }
+  .tl-tese { font-weight: 600; color: $navy; margin: .3rem 0 .2rem; }
+  blockquote { font-size: .95rem; border-left: 3px solid $blue; padding-left: .8rem; color: $ink-soft; margin: .4rem 0; }
+}
+.chip { display: inline-block; font-size: .75rem; border-radius: 999px; padding: .1rem .55rem; margin: .15rem .25rem 0 0;
+        border: 1px solid $line; background: #fff; }
+.chip.sim { background: #E3F4FB; border-color: $blue; }
+.chip.nao { background: #FEF3DF; border-color: $amber; }
+.chip.parcial { background: #EEF1F5; border-color: $muted; }
+.tipo-tag { font-size: .72rem; color: $muted; border: 1px solid $line; border-radius: 4px; padding: 0 .35rem; margin-left: .35rem; }
+
+table { font-size: .92rem; }

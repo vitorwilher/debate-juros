@@ -1,0 +1,177 @@
+# O debate dos juros: intervenções e posições
+#
+# Este arquivo alimenta a linha do tempo e o mapa de posições do site.
+# Para incluir uma intervenção nova, copie um bloco, preencha e abra um pull request
+# (ou sugira pelo formulário de issue do repositório).
+#
+# Campos:
+#   data       AAAA-MM-DD (data_texto opcional, se só o mês for conhecido)
+#   autor      nome(s)
+#   titulo     título original
+#   veiculo    onde saiu
+#   link       opcional; só links públicos e estáveis
+#   fase       "2017" ou "2026" (a rodada do debate)
+#   tipo       artigo | resposta | analise | teoria | evidencia
+#   tese       uma frase: o que o autor afirma
+#   argumento  uma ou duas frases: por quê
+#   citacao    opcional; trecho curto, entre aspas no original
+#   posicoes   opcional; para cada pergunta em `perguntas`: sim | nao | parcial
+#              (só preencha o que o texto efetivamente diz)
+
+perguntas:
+  - id: neofisher
+    curta: "Juro alto, inflação alta?"
+    texto: "No longo prazo, juros nominais mais altos levam a inflação mais alta?"
+  - id: convencional
+    curta: "Juro alto reduz a inflação no Brasil?"
+    texto: "A política monetária convencional (subir juros para baixar a inflação) funciona no Brasil?"
+  - id: dominancia
+    curta: "Há dominância fiscal?"
+    texto: "O Brasil vive dominância fiscal, em que juros mais altos pioram a inflação pela via da dívida?"
+  - id: lastro
+    curta: "Ajuste fiscal primeiro?"
+    texto: "O ajuste fiscal é pré-requisito para juros e inflação mais baixos?"
+  - id: corte
+    curta: "Cortar juros resolve o fiscal?"
+    texto: "Cortar os juros de forma anunciada resolveria o problema fiscal?"
+
+intervencoes:
+
+  # ---------------------------------------------------------------- 2017
+  - data: 2017-01-13
+    autor: André Lara Resende
+    titulo: "Juros e conservadorismo intelectual"
+    veiculo: Valor Econômico
+    fase: "2017"
+    tipo: artigo
+    tese: "Os modelos monetários estão em xeque: juros altos podem manter a inflação alta."
+    argumento: "O QE multiplicou a base monetária sem gerar inflação; só a teoria fiscal explica inflação estável com juro zero. A estabilidade de preços depende, no fim, do equilíbrio fiscal."
+    citacao: "Sem equilíbrio fiscal não há saída."
+    posicoes: { convencional: nao, lastro: sim }
+
+  - data: 2017-01-20
+    autor: Marcos Lisboa e Samuel Pessoa
+    titulo: "Nada de novo no debate monetário no Brasil"
+    veiculo: Valor Econômico
+    fase: "2017"
+    tipo: resposta
+    tese: "A teoria admite quase tudo; política pública exige evidência."
+    argumento: "O resultado neofisheriano exige que o juro real não responda à política. No Brasil, o modelo padrão funciona."
+    posicoes: { neofisher: nao, convencional: sim }
+
+  - data: 2017-01-24
+    autor: Solange Srour
+    titulo: "BC ganhou credibilidade"
+    veiculo: Valor Econômico
+    fase: "2017"
+    tipo: resposta
+    tese: "O Banco Central ganhou credibilidade ao acelerar os cortes com base nos dados."
+    argumento: "Depois do corte de 0,75 ponto, os juros futuros curtos e longos e os juros reais das NTN-B caíram, sem alta da inflação implícita."
+    posicoes: { convencional: sim }
+
+  - data: 2017-01-25
+    autor: Alexandre Schwartsman
+    titulo: "BC recuperou capacidade de ancorar as expectativas de inflação"
+    veiculo: Folha de S.Paulo
+    fase: "2017"
+    tipo: resposta
+    tese: "O Banco Central recuperou a capacidade de ancorar as expectativas."
+    argumento: "As expectativas caíram para perto da meta com a política convencional, o que pesa contra a tese da dominância fiscal."
+    posicoes: { convencional: sim, dominancia: nao }
+
+  - data: 2017-01-27
+    autor: André Lara Resende
+    titulo: "Teoria, prática e bom senso"
+    veiculo: Valor Econômico
+    fase: "2017"
+    tipo: artigo
+    tese: "A ineficácia da política monetária no Brasil é indiscutível."
+    argumento: "Estabilizar a dívida com Selic de 14% exigiria superávit de quase 5% do PIB. Acha a explicação de Cochrane promissora, mas com pontos questionáveis, e apoia as reformas fiscais."
+    citacao: "A explicação de Cochrane é intelectualmente estimulante, parece-me promissora, mas como ele mesmo reconhece, tem alguns pontos questionáveis."
+    posicoes: { neofisher: parcial, convencional: nao, lastro: sim }
+
+  - data: 2017-02-03
+    autor: Eduardo Loyo
+    titulo: "Neofisherianismo: vai entender"
+    veiculo: Valor Econômico
+    fase: "2017"
+    tipo: resposta
+    tese: "A equação de Fisher não implica que apertos monetários elevem a inflação."
+    argumento: "Com uma regra i = kπ + z, um aperto reduz a inflação se k > 1 (princípio de Taylor) e a eleva se k < 1. A divergência está na regra e na seleção de equilíbrio, não em Fisher."
+    posicoes: { neofisher: nao }
+
+  - data: 2017-02-10
+    autor: José Júlio Senna
+    titulo: "Taxa de juros e inflação"
+    veiculo: Valor Econômico
+    fase: "2017"
+    tipo: resposta
+    tese: "A teoria criticada funciona; aplicar o caso dos países ricos ao Brasil é inapropriado."
+    argumento: "O QE não gerou inflação por causa da recessão de balanço. Nos ciclos da Selic, a inflação reagiu como prevê o modelo padrão."
+    posicoes: { neofisher: nao, convencional: sim }
+
+  - data: 2017-02-17
+    autor: Francisco Lopes
+    titulo: "André, Cochrane e a teoria fiscal dos preços"
+    veiculo: Valor Econômico
+    fase: "2017"
+    tipo: resposta
+    tese: "Sem lastro fiscal a política monetária perde: uma conclusão conservadora."
+    argumento: "A âncora do regime de metas é a meta, não um juro fixo. A teoria fiscal só funciona como enunciada no caso 'exótico' de dívida toda em LFT."
+    posicoes: { convencional: sim, lastro: sim }
+
+  - data: 2017-02-24
+    autor: Nelson Barbosa
+    titulo: "Taxa real de juro: evolução e perspectivas"
+    veiculo: Valor Econômico
+    fase: "2017"
+    tipo: resposta
+    tese: "Não há dominância fiscal; o juro real já caiu muito."
+    argumento: "O juro real caiu de 45% (1992) para cerca de 5%. A Selic abaixo de 7,5% em 2012–2013 teve de ser revertida."
+    posicoes: { dominancia: nao }
+
+  - data: 2017-04-01
+    data_texto: "abr/2017"
+    autor: Carlos Eduardo Gonçalves
+    titulo: "Is fiscal dominance for real? Evidence from Brazil's high-frequency data"
+    veiculo: mimeo
+    fase: "2017"
+    tipo: evidencia
+    tese: "Não há dominância fiscal nos dados de alta frequência."
+    argumento: "Identificada nas janelas das reuniões do Copom, uma alta de juros reduz a inflação esperada."
+    posicoes: { convencional: sim, dominancia: nao }
+
+  # ---------------------------------------------------------------- 2026
+  - data: 2026-09-25
+    autor: André Lara Resende
+    titulo: "Eu acuso: uma proposta para eliminar os juros absurdos"
+    veiculo: Um Cético Esperançoso (Substack)
+    link: https://andrelararesende.substack.com/p/eu-acuso-uma-proposta-para-eliminar
+    fase: "2026"
+    tipo: artigo
+    tese: "O juro é o 'único motor' da dívida; reduzi-lo de forma anunciada é a solução do desequilíbrio fiscal."
+    argumento: "Propõe um Conselho Fiscal e Monetário com metas para a Selic, uma banda entre 3% e 5,5%, transição de cerca de 12 meses para 7,5% e uso das reservas contra a fuga do carry trade. Recusa o rótulo de dominância fiscal."
+    citacao: "Não se trata de dominância fiscal, mas de coordenação transparente e anunciada de políticas monetária e fiscal."
+    posicoes: { neofisher: sim, convencional: nao, dominancia: nao, lastro: nao, corte: sim }
+
+  - data: 2026-11-03
+    autor: John Cochrane
+    titulo: "Fisher and Resende in Brazil"
+    veiculo: The Grumpy Economist (Substack)
+    link: https://www.grumpy-economist.com/p/fisher-and-resende-in-brazil
+    fase: "2026"
+    tipo: resposta
+    tese: "Um argumento sofisticado e coerente, mas sem precedente histórico de sucesso."
+    argumento: "Aceita a previsão neofisheriana de longo prazo e que juros menores aliviariam a conta da dívida, mas a preocupação principal é o lado fiscal: a confiança nos superávits futuros. Metas pesam menos que reformas institucionais, e a defesa do câmbio com reservas faz pouco sentido."
+    citacao: "I do not know of a good successful historical precedent for the Resende proposal."
+    posicoes: { neofisher: sim, lastro: sim, corte: parcial }
+
+  - data: 2026-11-03
+    autor: Renan Sousa
+    titulo: "O que o 'acusador' André Lara Resende colocou em debate e vale mais do que a proposta em si"
+    veiculo: Seu Dinheiro
+    link: https://www.seudinheiro.com/2026/economia/analise-o-que-o-acusador-andre-lara-resende-colocou-em-debate-e-vale-mais-do-que-a-proposta-em-si-rens/
+    fase: "2026"
+    tipo: analise
+    tese: "O artigo 'desinterdita o debate público', mas a proposta encontra limites claros."
+    argumento: "Valoriza a discussão sobre o custo da dívida e aponta limites como o uso das reservas para conter a saída de capitais."

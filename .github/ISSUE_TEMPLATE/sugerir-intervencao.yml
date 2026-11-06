@@ -1,0 +1,31 @@
+name: Sugerir intervenção no debate
+description: Um artigo, resposta, paper ou dado novo que deveria entrar na linha do tempo
+title: "[Intervenção] "
+labels: ["intervenção"]
+body:
+  - type: input
+    id: autor
+    attributes: { label: Autor(es) }
+    validations: { required: true }
+  - type: input
+    id: titulo
+    attributes: { label: Título e veículo }
+    validations: { required: true }
+  - type: input
+    id: data
+    attributes: { label: Data de publicação, placeholder: "AAAA-MM-DD" }
+    validations: { required: true }
+  - type: input
+    id: link
+    attributes: { label: Link público }
+  - type: textarea
+    id: tese
+    attributes:
+      label: Tese e argumento
+      description: Em uma ou duas frases, o que o texto afirma e por quê.
+    validations: { required: true }
+  - type: textarea
+    id: citacao
+    attributes:
+      label: Trecho curto que resume a posição
+      description: Até duas frases, no original.

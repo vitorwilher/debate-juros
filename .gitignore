@@ -1,0 +1,9 @@
+_site/
+.quarto/
+site-data/
+__pycache__/
+.DS_Store
+/.luarc.json
+
+/.quarto/
+**/*.quarto_ipynb

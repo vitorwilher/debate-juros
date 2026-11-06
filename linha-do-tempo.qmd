@@ -1,0 +1,45 @@
+---
+title: "Linha do tempo"
+pagetitle: "O debate dos juros: linha do tempo"
+description: "Do debate de 2017 no Valor Econômico ao 'Eu acuso' de 2026: quem escreveu o quê, quando e com que argumento."
+---
+
+O debate tem duas rodadas. Em **2017**, com a Selic em dois dígitos e o país saindo da recessão, um
+artigo de André Lara Resende no *Valor Econômico* abriu dois meses de discussão sobre a hipótese
+neofisheriana, a teoria fiscal do nível de preços e a dominância fiscal. Em **2026**, às vésperas da
+eleição, o mesmo autor publicou uma proposta concreta para derrubar os juros, e o debate voltou.
+
+```{ojs}
+//| echo: false
+deb = FileAttachment("site-data/debate.json").json()
+tipos = ({artigo: "artigo de Lara Resende", resposta: "resposta", analise: "análise", teoria: "teoria", evidencia: "evidência empírica"})
+rotulos = ({sim: "sim", nao: "não", parcial: "em parte"})
+viewof fase = Inputs.radio(["Todas", "2017", "2026"], {value: "Todas", label: "Rodada"})
+viewof busca = Inputs.text({placeholder: "Buscar autor, tese ou palavra", label: "Buscar"})
+```
+
+```{ojs}
+//| echo: false
+dataBR = it => it.data_texto ?? new Date(it.data + "T12:00").toLocaleDateString("pt-BR", {day: "2-digit", month: "short", year: "numeric"})
+filtrados = deb.intervencoes.filter(it => (fase === "Todas" || it.fase === fase) &&
+  (busca === "" || JSON.stringify(it).toLowerCase().includes(busca.toLowerCase())))
+chips = it => deb.perguntas.filter(p => it.posicoes[p.id]).map(p =>
+  html`<span class="chip ${it.posicoes[p.id]}" title="${p.texto}">${p.curta} <b>${rotulos[it.posicoes[p.id]]}</b></span>`)
+item = it => html`<div class="tl-item ${it.tipo}">
+  <div class="tl-data">${dataBR(it)} · ${it.veiculo}<span class="tipo-tag">${tipos[it.tipo]}</span></div>
+  <div class="tl-autor">${it.autor}</div>
+  <div class="tl-titulo">${it.link ? html`<a href="${it.link}" target="_blank" rel="noopener">${it.titulo}</a>` : it.titulo}</div>
+  <div class="tl-tese">${it.tese}</div>
+  <div>${it.argumento}</div>
+  ${it.citacao ? html`<blockquote>“${it.citacao}”</blockquote>` : ""}
+  <div>${chips(it)}</div>
+</div>`
+html`${["2017", "2026"].filter(f => filtrados.some(it => it.fase === f)).map(f => html`
+  <div class="tl-fase">${f === "2017" ? "2017 · a primeira rodada" : "2026 · a proposta"}</div>
+  ${filtrados.filter(it => it.fase === f).map(item)}`)}
+  ${filtrados.length === 0 ? html`<p>Nada encontrado.</p>` : ""}`
+```
+
+[Os rótulos de posição resumem o que cada texto afirma sobre as perguntas do
+[mapa de posições](posicoes.qmd); só aparecem quando o texto trata do ponto. Faltou alguém?
+[Sugira uma intervenção](https://github.com/vitorwilher/debate-juros/issues/new?template=sugerir-intervencao.yml).]{.nota-fonte}
