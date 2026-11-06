@@ -86,9 +86,9 @@ Plot.plot({
   x: {label: "anos à frente", ticks: H},
   y: {label: "dívida bruta, % do PIB", grid: true, tickFormat: d => fmt(d, 0),
       domain: [Math.min(...cen.map(c => c.d)) - 5, Math.max(...cen.map(c => c.d)) + 5]},
-  color: {domain: ["Sem mudança", "Proposta", "Ajuste fiscal"], range: ["#F5A524", "#1CA0D8", "#0A1A3C"], legend: true},
+  color: {domain: ["Sem mudança", "Proposta", "Ajuste fiscal"], range: ["#E85500", "#1A1A1A", "#8C7A5B"], legend: true},
   marks: [
-    Plot.ruleY([d0], {stroke: "#C6D0DC", strokeDasharray: "4,4"}),
+    Plot.ruleY([d0], {stroke: "#8C7A5B", strokeDasharray: "4,4"}),
     Plot.lineY(cen, {x: "ano", y: "d", stroke: "cenario", strokeWidth: 2.5}),
     Plot.dot(cen, Plot.pointer({x: "ano", y: "d", fill: "cenario", r: 5,
       title: d => `${d.cenario}, ano ${d.ano}: ${fmt(d.d)}% do PIB`, tip: true}))
@@ -103,15 +103,15 @@ Plot.plot({
   x: {label: "anos à frente", ticks: H},
   y: {label: "custo da dívida, % a.a.", grid: true, domain: [0, Math.max(r0, alvo + premio) + 2]},
   marks: [
-    Plot.ruleY([th + dth], {stroke: "#8894A5", strokeDasharray: "4,4"}),
-    Plot.text([{x: H, y: th + dth}], {x: "x", y: "y", text: () => "crescimento nominal", dy: -8, textAnchor: "end", fill: "#8894A5"}),
-    Plot.lineY(custos_prop.map((r, i) => ({ano: i + 1, r})), {x: "ano", y: "r", stroke: "#1CA0D8", strokeWidth: 2.5}),
-    Plot.ruleY([r0], {stroke: "#F5A524"})
+    Plot.ruleY([th + dth], {stroke: "#5A5A5A", strokeDasharray: "4,4"}),
+    Plot.text([{x: H, y: th + dth}], {x: "x", y: "y", text: () => "crescimento nominal", dy: -8, textAnchor: "end", fill: "#5A5A5A"}),
+    Plot.lineY(custos_prop.map((r, i) => ({ano: i + 1, r})), {x: "ano", y: "r", stroke: "#1A1A1A", strokeWidth: 2.5}),
+    Plot.ruleY([r0], {stroke: "#E85500"})
   ]
 })
 ```
 
-[Custo médio da dívida no cenário da proposta (azul) e sem mudança (laranja). Enquanto o custo
+[Custo médio da dívida no cenário da proposta (preto) e sem mudança (laranja). Enquanto o custo
 fica acima do crescimento nominal (tracejado), a dívida cresce sozinha.]{.nota-fonte}
 
 ## Como ler o simulador

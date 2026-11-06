@@ -1,83 +1,127 @@
 /*-- scss:defaults --*/
-@import url('https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,700;0,800;1,800&family=Inter:wght@400;600&display=swap');
+// Estilo editorial (modelo "Mapa da Operação Eficiente", Sistema de Donos):
+// fundo creme, títulos em serifa, preto e laranja, blocos pretos com faixa laranja.
 
-$navy: #0A1A3C;
-$blue: #1CA0D8;
-$amber: #F5A524;
-$ink-soft: #3A4757;
-$muted: #8894A5;
-$line: #E6EAF0;
-$paper: #F5F7FA;
+$preto: #1A1A1A;
+$laranja: #E85500;
+$creme: #FBF2DC;
+$cinza: #5A5A5A;
+$linha: #E3DCCB;
+$branco: #FFFFFF;
 
-$primary: $blue;
-$body-color: $ink-soft;
-$headings-color: $navy;
-$link-color: #0061D6;
-$font-family-sans-serif: "Inter", system-ui, sans-serif;
-$headings-font-family: "Archivo", "Inter", sans-serif;
-$headings-font-weight: 700;
-$navbar-bg: #FFFFFF;
-$navbar-fg: $navy;
-$navbar-hl: $blue;
-$footer-bg: $paper;
+$body-bg: $creme;
+$body-color: $preto;
+$primary: $laranja;
+$link-color: #B54200;
+$headings-color: $preto;
+$font-family-sans-serif: Arial, Helvetica, sans-serif;
+$headings-font-family: "Century Schoolbook", Georgia, "Times New Roman", serif;
+$headings-font-weight: 400;
+$navbar-bg: $creme;
+$navbar-fg: $preto;
+$navbar-hl: $laranja;
+$footer-bg: $creme;
+$border-color: $linha;
+$table-border-color: $linha;
+$code-color: $preto;
 
 /*-- scss:rules --*/
-.navbar { border-bottom: 1px solid $line; }
-.navbar-brand img { max-height: 28px; }
+body { line-height: 1.5; font-size: 17px; }
+.navbar { border-bottom: 1px solid $preto; box-shadow: none; }
+.navbar-title { font-family: "Century Schoolbook", Georgia, serif; font-size: 1.15rem; }
+.navbar-brand img { max-height: 26px; }
+.nav-link { font-size: .92rem; letter-spacing: .02em; }
+.nav-link.active { font-weight: 700; }
 
-.hero {
-  margin: 1.5rem 0 2rem;
-  .kicker { font-family: "Archivo"; font-weight: 700; letter-spacing: .12em; color: $blue; font-size: .8rem; }
-  h1 { font-family: "Archivo"; font-weight: 800; font-size: 2.6rem; line-height: 1.1; margin: .3rem 0 .8rem;
-       em { font-style: italic; background: linear-gradient(90deg, $blue, #0061D6);
-            -webkit-background-clip: text; background-clip: text; color: transparent; } }
-  .lede { font-size: 1.15rem; max-width: 46rem; }
+h2 { font-size: 1.75rem; padding-bottom: .5rem; border-bottom: 1px solid $linha; margin-top: 2.6rem; }
+h3 { font-size: 1.3rem; }
+#title-block-header h1.title { font-size: 2.4rem; }
+.quarto-title .description, p.subtitle { color: $cinza; }
+
+/* cabeçalho com a faixa laranja */
+.hero { display: flex; align-items: stretch; gap: 18px; margin: 1.4rem 0 1.8rem; }
+.hero::before { content: ""; width: 6px; background: $laranja; flex-shrink: 0; }
+.hero .kicker, .eyebrow { font-size: .75rem; letter-spacing: .14em; text-transform: uppercase; color: $laranja; font-weight: 700; }
+.hero h1 { font-family: "Century Schoolbook", Georgia, serif; font-weight: 400; font-size: 2.9rem; line-height: 1.08; margin: .35rem 0 .7rem; border: 0;
+  em { color: $laranja; } }
+.hero .lede { color: $cinza; font-size: 1.08rem; max-width: 44rem; display: block; }
+
+/* frase-chave: bloco preto com faixa laranja */
+.frase, .destaque {
+  background: $preto; color: $creme; padding: 22px 26px; border-left: 6px solid $laranja;
+  font-family: Georgia, serif; font-size: 1.2rem; line-height: 1.45; margin: 1.6rem 0 2rem;
+  p { margin: 0; color: $creme; }
+  strong { color: #FFB27A; font-weight: 400; }
+  a { color: #FFB27A; }
 }
 
-.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: .8rem; margin: 1rem 0 1.5rem; }
+/* cartões de número */
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 1rem 0 1.6rem; }
 .card-am {
-  background: $paper; border: 1px solid $line; border-radius: 10px; padding: .9rem 1rem;
-  .rot { font-size: .78rem; text-transform: uppercase; letter-spacing: .05em; color: $muted; }
-  .val { font-family: "Archivo"; font-weight: 800; font-size: 1.9rem; color: $navy; line-height: 1.15; }
-  .val.alerta { color: #C47F0B; }
-  .ref { font-size: .78rem; color: $muted; }
+  background: $branco; border: 1px solid $linha; border-top: 6px solid $preto; padding: 14px 16px;
+  .rot { font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; color: $cinza; font-weight: 700; }
+  .val { font-family: "Century Schoolbook", Charter, Georgia, serif; font-variant-numeric: lining-nums; font-size: 1.95rem; line-height: 1.05; color: $preto; margin: .35rem 0 .25rem; }
+  .ref { font-size: .78rem; color: $cinza; }
+  &.destaque-card { border-top-color: $laranja; .val { color: $laranja; } }
 }
+.card-am:has(.val.alerta) { border-top-color: $laranja; .val { color: $laranja; } }
 
-.nota-fonte { font-size: .82rem; color: $muted; font-style: italic; margin-top: -.3rem; }
+.nota-fonte { display: block; font-size: .8rem; color: $cinza; margin-top: .2rem; }
 
-.destaque {
-  border-left: 4px solid $blue; background: $paper; padding: 1rem 1.2rem; margin: 1.5rem 0;
-  font-family: "Archivo"; font-size: 1.2rem; color: $navy;
-}
+/* tabelas */
+table, .table { background: $branco; font-size: .9rem; border: 1px solid $linha; }
+.table > :not(caption) > * > * { background: transparent; padding: .55rem .7rem; }
+thead th { font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; color: $cinza; font-weight: 700; }
 
+/* caixas (callouts) no estilo "caixa" */
+.callout { background: $branco !important; border: 1px solid $linha !important; border-left: 6px solid $laranja !important; border-radius: 0 !important; }
+.callout .callout-header { background: transparent !important; border: 0 !important; }
+.callout .callout-title-container { font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; font-weight: 700; color: $laranja; }
+.callout-icon::before { display: none; }
+
+/* chamada final */
 .cta-am {
-  background: $navy; color: #fff; border-radius: 12px; padding: 1.4rem 1.6rem; margin: 2.5rem 0 1rem;
-  h3 { color: #fff; margin-top: 0; }
-  p { color: #C9D3DE; }
-  a.btn-am { display: inline-block; background: $blue; color: #fff; padding: .55rem 1.1rem; border-radius: 8px;
-             text-decoration: none; font-weight: 600; }
+  background: $preto; color: $creme; padding: 1.6rem 1.8rem; margin: 3rem 0 1rem; border-left: 6px solid $laranja;
+  h3 { color: $creme; margin-top: 0; font-size: 1.5rem; border: 0; }
+  p { color: #E9DFC6; }
+  a.btn-am { display: inline-block; background: $laranja; color: $preto; padding: .7rem 1.3rem; text-decoration: none; font-weight: 700; }
 }
+
+/* controles (Observable Inputs) */
+form.oi-3a86ea, .observablehq form { font-family: Arial, Helvetica, sans-serif; }
+input[type=range] { accent-color: $laranja; }
+input[type=radio] { accent-color: $laranja; }
+input[type=number], input[type=text] { background: $branco; border: 1px solid $linha; }
 
 /* linha do tempo */
-.tl-fase { font-family: "Archivo"; font-weight: 800; color: $navy; font-size: 1.5rem; margin: 2rem 0 .6rem;
-           border-bottom: 2px solid $line; padding-bottom: .3rem; }
-.tl-item { position: relative; border-left: 3px solid $line; padding: 0 0 1.4rem 1.2rem; margin-left: .4rem;
-  &::before { content: ""; position: absolute; left: -8px; top: .3rem; width: 13px; height: 13px; border-radius: 50%;
-              background: $blue; border: 2px solid #fff; }
-  &.artigo::before { background: $navy; }
-  &.evidencia::before, &.teoria::before { background: $amber; }
-  &.analise::before { background: $muted; }
-  .tl-data { font-size: .8rem; color: $muted; text-transform: uppercase; letter-spacing: .04em; }
-  .tl-autor { font-family: "Archivo"; font-weight: 700; color: $navy; font-size: 1.1rem; }
-  .tl-titulo { font-style: italic; }
-  .tl-tese { font-weight: 600; color: $navy; margin: .3rem 0 .2rem; }
-  blockquote { font-size: .95rem; border-left: 3px solid $blue; padding-left: .8rem; color: $ink-soft; margin: .4rem 0; }
+.tl-fase { font-family: "Century Schoolbook", Georgia, serif; color: $preto; font-size: 1.6rem; margin: 2.4rem 0 1rem;
+           border-bottom: 1px solid $preto; padding-bottom: .4rem; }
+.tl-item { position: relative; background: $branco; border: 1px solid $linha; border-left: 6px solid $linha; padding: 14px 18px; margin-bottom: 12px;
+  &.artigo { border-left-color: $laranja; }
+  &.resposta { border-left-color: $preto; }
+  &.evidencia, &.teoria { border-left-color: #8C7A5B; }
+  &.analise { border-left-color: #C9B98F; }
+  .tl-data { font-size: .7rem; color: $cinza; text-transform: uppercase; letter-spacing: .1em; font-weight: 700; }
+  .tl-autor { font-family: "Century Schoolbook", Georgia, serif; color: $preto; font-size: 1.3rem; margin-top: .15rem; }
+  .tl-titulo { font-style: italic; color: $cinza; }
+  .tl-tese { font-weight: 700; color: $preto; margin: .5rem 0 .25rem; }
+  blockquote { font-family: Georgia, serif; font-size: 1rem; background: $preto; color: $creme; border-left: 4px solid $laranja; padding: .6rem .9rem; margin: .6rem 0; }
 }
-.chip { display: inline-block; font-size: .75rem; border-radius: 999px; padding: .1rem .55rem; margin: .15rem .25rem 0 0;
-        border: 1px solid $line; background: #fff; }
-.chip.sim { background: #E3F4FB; border-color: $blue; }
-.chip.nao { background: #FEF3DF; border-color: $amber; }
-.chip.parcial { background: #EEF1F5; border-color: $muted; }
-.tipo-tag { font-size: .72rem; color: $muted; border: 1px solid $line; border-radius: 4px; padding: 0 .35rem; margin-left: .35rem; }
+.chip { display: inline-flex; gap: 6px; align-items: center; font-size: .75rem; border-radius: 999px; padding: .15rem .6rem; margin: .4rem .3rem 0 0;
+        border: 1px solid $linha; background: $creme; }
+.chip b { font-weight: 700; }
+.chip.sim b { color: $preto; } .chip.sim { border-color: $preto; }
+.chip.nao b { color: $laranja; } .chip.nao { border-color: $laranja; }
+.chip.parcial { border-color: #C9B98F; }
+.tipo-tag { font-size: .65rem; color: $cinza; border: 1px solid $linha; padding: 0 .4rem; margin-left: .45rem; letter-spacing: .06em; }
 
-table { font-size: .92rem; }
+/* gráficos */
+svg[class^="plot"] { background: transparent; }
+figure, .cell-output-display { margin-bottom: .3rem; }
+
+.nav-footer { border-top: 1px solid $preto; font-size: .82rem; }
+
+@media (max-width: 720px) {
+  .hero h1 { font-size: 2.2rem; }
+  .card-am .val { font-size: 1.8rem; }
+}
