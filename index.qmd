@@ -180,8 +180,8 @@ Plot.plot({
 ### Quer a leitura completa?
 
 O dossiê **O debate dos juros** reúne a proposta, a teoria por trás dela, o debate de 2017 a 2026 e
-os dados num PDF de 20 páginas. Ele vai para quem assina o Boletim AM, uma leitura diária de dados da
-economia brasileira, com o código e os números por trás de cada conclusão.
+os dados num PDF de 21 páginas. Ele é gratuito e chega pelo e-mail, junto com o Boletim AM, a
+newsletter da Análise Macro com dados da economia brasileira e o código por trás de cada conclusão.
 
 [Quero receber →](https://analisemacro.com.br/boletim-am){.btn-am}
 :::
